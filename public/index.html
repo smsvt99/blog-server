@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <form id="form" action="/login" method="post">
+        <div>
+            <label>Username:</label>
+            <input type="text" name="username"/>
+        </div>
+        <div>
+            <label>Password:</label>
+            <input type="password" name="password"/>
+        </div>
+        <div>
+            <input type="submit" value="Log In"/>
+        </div>
+    </form>
+    <a href="#" id="commentsLink">Go to comments</a>
+    <script>
+        document.getElementById("commentsLink").addEventListener('click', getComments);
+        function getComments(e){
+            e.preventDefault();
+
+            fetch("/comments", {credentials: 'include'})
+                .then(res => res.json())
+                .then(res => {
+                    console.log(res);
+                })
+        }
+    </script>
+</html>

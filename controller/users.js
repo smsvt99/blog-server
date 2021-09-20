@@ -10,11 +10,22 @@ exports.GET = async (req, res) => {
 }
 
 exports.POST = async (req, res) => {
-    const user = new User(req.body);
-    user.password = await user.getHashedPassword();
-    await user.save();
-
-    res.send(await User.find({}));
+    //public
+    let response = {};
+    try{
+        const user = new User({
+            role: "USER",
+            ...req.body
+        });
+        user.password = await user.getHashedPassword();
+        await user.save();
+        response.success = true;
+    } catch(e){
+        console.log(e);
+        response.error = e;
+        response.success = false;
+    }
+    res.send(response);
 }
 
 exports.PATCH = async (req, res) => {

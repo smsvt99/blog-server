@@ -15,10 +15,21 @@ module.exports.GET = async (req, res) => {
 }
 
 exports.POST = async (req, res) => {
-    const comment = new Comment(req.body);
-    await comment.save();
-
-    res.send(await Comment.find({}));
+    if(!hasRole(req, res, ['ADMIN', 'USER'])) return;
+    let success;
+    try{
+        req.body.postId = mongoose.Types.ObjectId(req.body.postId)
+        const comment = new Comment({
+            user: req.user._id,
+            ...req.body
+        });
+        await comment.save();
+        success = true;
+    } catch(e) {
+        console.log(e);
+        success = false;
+    }
+    res.send({success: success});
 }
 
 exports.PATCH = async (req, res) => {

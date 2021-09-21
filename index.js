@@ -98,6 +98,10 @@ app.get('/logout', (req, res) => {
     res.redirect('/me');
 })
 
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public', 'index.html'));
+})
+
 app.listen(process.env.PORT, () => {
     console.log(`App listening on port ${process.env.PORT}`)
 });

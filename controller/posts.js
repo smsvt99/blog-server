@@ -1,11 +1,10 @@
 
 const Post    = require('../model/post'),
-      {hasRole} = require('../utils')
+      {hasRole} = require('../security')
 
 
 //query params: _id, stub
 exports.GET = async (req, res) => {
-    //public
     try{
         if(req.query._id){
             const post = await Post
@@ -31,7 +30,6 @@ exports.GET = async (req, res) => {
 }
 
 exports.POST = async (req, res) => {
-    if(!hasRole(req, res, 'ADMIN')) return;
     let success;
     try{
         const post = new Post({
@@ -50,7 +48,6 @@ exports.POST = async (req, res) => {
 
 //query params: _id
 exports.PATCH = async (req, res) => {
-    if(!hasRole(req, res, 'ADMIN')) return;
     let success;
     try{
         const post = await Post.findByIdAndUpdate(req.query._id, req.body);
@@ -64,7 +61,6 @@ exports.PATCH = async (req, res) => {
 
 //query params: _id
 exports.DELETE = async (req, res) => {
-    if(!hasRole(req, res, 'ADMIN')) return;
     let success;
     try{
         const post = await Post.findOneAndDelete({"_id":req.query._id});

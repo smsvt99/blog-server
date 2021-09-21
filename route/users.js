@@ -2,21 +2,13 @@ const express = require('express'),
       router = express.Router(),
       controller = require('../controller/users'),
       User = require('../model/user'),
-      utils = require('../utils');
+      security = require('../security');
 
-router.use(async (req, res, next) => {
-    if(req.query._id){
-        const user = await User.exists({_id: req.query._id});
-        if(!user){
-            return res.status(404).send(utils._404(req.query._id, "USERS"));
-        }
-    }
-    next();
-})
+router.use(security._404Check(User))
 
-router.get("/", controller.GET);
+// router.get("/", controller.GET); TODO
 router.post("/", controller.POST);
-router.patch("/", controller.PATCH);
-router.delete("/", controller.DELETE);
+// router.patch("/", controller.PATCH); TODO
+// router.delete("/", controller.DELETE); TODO
 
 module.exports = router;

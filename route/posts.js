@@ -2,21 +2,13 @@ const express = require('express'),
       router  = express.Router(),
       controller = require('../controller/posts'),
       Post = require('../model/post'),
-      utils = require('../utils');
+      security = require('../security');
 
-router.use(async (req, res, next) => {
-    if(req.query._id){
-        const tag = await Post.exists({_id: req.query._id});
-        if(!tag){
-            return res.status(404).send(utils._404(req.query._id, "POSTS"));
-        }
-    }
-    next();
-});
+router.use(security._404Check(Post));
 
 router.get("/", controller.GET);
-router.post("/", controller.POST);
-router.patch("/", controller.PATCH);
-router.delete("/", controller.DELETE);
+router.post("/", security.roleCheck("ADMIN"), controller.POST);
+router.patch("/", security.roleCheck("ADMIN"), controller.PATCH);
+router.delete("/", security.roleCheck("ADMIN"), controller.DELETE);
 
 module.exports = router;

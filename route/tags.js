@@ -2,22 +2,14 @@ const express = require('express'),
       router  = express.Router(),
       controller = require('../controller/tags'),
       Tag = require('../model/tag'),
-      utils = require('../utils');
+      security = require('../security');
 
 
-router.use(async (req, res, next) => {
-    if(req.query._id){
-        const tag = await Tag.exists({_id: req.query._id});
-        if(!tag){
-            return res.status(404).send(utils._404(req.query._id, "TAGS"));
-        }
-    }
-    next();
-})
+router.use(security._404Check(Tag));
 
-router.get("/", controller.GET);
-router.post("/", controller.POST);
-router.patch("/", controller.PATCH);
-router.delete("/", controller.DELETE);
+router.get("/", security.roleCheck("ADMIN"),  controller.GET);
+router.post("/", security.roleCheck("ADMIN"), controller.POST);
+// router.patch("/", controller.PATCH); TODO
+// router.delete("/", controller.DELETE); TODO
 
 module.exports = router;

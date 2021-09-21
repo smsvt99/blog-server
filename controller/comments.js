@@ -1,21 +1,17 @@
-const Comment = require('../model/comment'),
-{ authorize } = require('../utils');
+const Comment = require('../model/comment');
 
 module.exports.GET = async (req, res) => {
-    //public
+    const search = {};
     if(req.query.post_id){
-        const comment = await Comment.find({postId:req.query.post_id})
-            .populate("user");
-        res.send(comment);
-    } else {
-        const comments = await Comment.find({})
-            .populate("user");
-        res.send(comments);
+        search.postId = req.query.post_id
     }
+    const comments = await Comment.find(search)
+        .populate("user");
+    res.send(comments);
+    
 }
 
 exports.POST = async (req, res) => {
-    if(!hasRole(req, res, ['ADMIN', 'USER'])) return;
     let success;
     try{
         req.body.postId = mongoose.Types.ObjectId(req.body.postId)
@@ -40,6 +36,5 @@ exports.PATCH = async (req, res) => {
 
 exports.DELETE = async (req, res) => {
     const comment = await Comment.findOneAndDelete(req.query._id);
-
     res.send(await Comment.find({}));
 }

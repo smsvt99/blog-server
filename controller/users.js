@@ -10,7 +10,6 @@ exports.GET = async (req, res) => {
 }
 
 exports.POST = async (req, res) => {
-    //public
     let response = {};
     try{
         const user = new User({

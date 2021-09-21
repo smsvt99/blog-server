@@ -1,19 +1,10 @@
-const Tag = require('../model/tag'),
-    { hasRole } = require('../utils') 
+const Tag = require('../model/tag');
 
 module.exports.GET = async (req, res) => {
-    //public
-    //do i need this?
-    // if(req.query._id){
-    //     const tag = await Tag.findById(req.query._id);
-    //     res.send(tag);
-    // } else {
-        res.send(await Tag.find({}));
-    // }
+    res.send(await Tag.find({}));
 }
 
 exports.POST = async (req, res) => {
-    if(!hasRole(req, res, 'ADMIN')) return;
     let success;
     try{
         const tag = new Tag(req.body);
@@ -27,7 +18,6 @@ exports.POST = async (req, res) => {
 }
 
 exports.PATCH = async (req, res) => {
-    if(!hasRole(req, res, 'ADMIN')) return;
     let success;
     try{
         const tag = await Tag.findByIdAndUpdate(req.query._id, req.body);
@@ -40,7 +30,6 @@ exports.PATCH = async (req, res) => {
 }
 
 exports.DELETE = async (req, res) => {
-    if(!hasRole(req, res, 'ADMIN')) return;
     let success;
     try{
         const tag = await Tag.findOneAndDelete({_id:req.query._id});

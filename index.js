@@ -102,6 +102,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../public', 'index.html'));
 })
 
+app.get('*', (req, res) => {
+    res.redirect('/');
+})
+
 app.listen(process.env.PORT, () => {
     console.log(`App listening on port ${process.env.PORT}`)
 });
